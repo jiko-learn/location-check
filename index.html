@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .gradient-bg {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full">
+      <!-- Main Card -->
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+        <!-- Header -->
+        <div
+          class="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 text-white"
+        >
+          <div class="flex items-center justify-center mb-2">
+            <i class="fas fa-map-marker-alt text-4xl"></i>
+          </div>
+          <h1 class="text-2xl font-bold text-center">Location Checker</h1>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6">
+          <!-- Loading State -->
+          <div id="loading" class="text-center py-4">
+            <div class="inline-block">
+              <i
+                class="fas fa-spinner fa-spin text-5xl text-purple-600 pulse"
+              ></i>
+            </div>
+            <p class="mt-4 text-gray-600 font-medium">
+              Checking your location...
+            </p>
+            <p class="mt-2 text-gray-500 text-sm">
+              Please allow location access
+            </p>
+          </div>
+
+          <!-- In Range State -->
+          <div id="inRange" class="hidden fade-in">
+            <div class="text-center py-3">
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome!</h2>
+              <div
+                onclick="window.location.href='https://www.youtube.com'"
+                style="cursor: pointer"
+              >
+                <div
+                  class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4"
+                >
+                  <i class="fas fa-check-circle text-5xl text-green-500"></i>
+                </div>
+                <p class="text-gray-600 mb-3">
+                  กดที่ปุ่ม
+                  <i class="fas fa-check-circle text-2xl text-green-500"></i>
+                  เพื่อเข้าสู่ระบบ
+                </p>
+              </div>
+              <!-- Information Section -->
+              <div
+                class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 text-left"
+              >
+                <div class="space-y-2">
+                  <div class="flex items-start">
+                    <i class="fas fa-building text-green-600 mt-1 mr-3"></i>
+                    <div>
+                      <p class="font-medium text-gray-800">Authorized Area</p>
+                      <p class="text-sm text-gray-600">
+                        You have access to this location's services
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-ruler text-green-600 mt-1 mr-3"></i>
+                    <div>
+                      <p class="font-medium text-gray-800">
+                        Distance: <span id="distanceInRange">0</span>m
+                      </p>
+                      <p class="text-sm text-gray-600">From the center point</p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-map-pin text-green-600 mt-1 mr-3"></i>
+                    <div>
+                      <p class="font-medium text-gray-800">Your Coordinates</p>
+                      <p class="text-sm text-gray-600" id="userCoordsInRange">
+                        -
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Out of Range State -->
+          <div id="outOfRange" class="hidden fade-in">
+            <div class="text-center py-3">
+              <div
+                class="inline-flex items-center justify-center w-20 h-20 bg-red-100 rounded-full mb-2"
+              >
+                <i class="fas fa-times-circle text-5xl text-red-500"></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                Access Denied
+              </h2>
+              <p class="text-gray-600 mb-2">
+                You are not close to the checked point area
+              </p>
+
+              <!-- Warning Section -->
+              <div
+                class="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-4 text-left"
+              >
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-2 flex items-center"
+                >
+                  <i class="fas fa-map-marked-alt mr-2 text-red-600"></i>
+                  Location Required
+                </h3>
+                <div class="space-y-2">
+                  <div class="flex items-start">
+                    <i class="fas fa-ruler text-red-600 mt-1 mr-2"></i>
+                    <div>
+                      <p class="font-medium text-gray-800">
+                        Current Distance: <span id="distanceOutRange">0</span>m
+                      </p>
+                      <p class="text-sm text-gray-600">
+                        From the checked point
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="fas fa-walking text-red-600 mt-1 mr-3"></i>
+                    <div>
+                      <p class="font-medium text-gray-800">
+                        Please move closer
+                      </p>
+                      <p class="text-sm text-gray-600">
+                        Access will be granted when you're in range
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Error State -->
+          <div id="error" class="hidden fade-in">
+            <div class="text-center py-3">
+              <div
+                class="inline-flex items-center justify-center w-20 h-20 bg-yellow-100 rounded-full mb-4"
+              >
+                <i
+                  class="fas fa-exclamation-circle text-5xl text-yellow-500"
+                ></i>
+              </div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                Location Error
+              </h2>
+              <p class="text-gray-600 mb-3" id="errorMessage">
+                Unable to access your location
+              </p>
+
+              <div class="bg-yellow-50 rounded-xl p-4 text-left">
+                <p class="text-sm text-gray-700 mb-2">
+                  <strong>Please ensure:</strong>
+                </p>
+                <ul class="text-sm text-gray-600 space-y-1 ml-4">
+                  <li>• Location services are enabled</li>
+                  <li>• You've granted permission to access location</li>
+                  <li>• Your device supports geolocation</li>
+                </ul>
+              </div>
+
+              <button
+                onclick="checkLocation()"
+                class="mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+              >
+                <i class="fas fa-redo mr-2"></i>Try Again
+              </button>
+            </div>
+          </div>
+
+          <!-- Refresh Button -->
+          <div id="refreshButton" class="hidden mt-3 text-center">
+            <button
+              onclick="checkLocation()"
+              class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 inline-flex items-center"
+            >
+              <i class="fas fa-sync-alt mr-2"></i>Refresh Location
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+          <div class="flex items-center justify-center text-sm text-gray-600">
+            <i class="fas fa-shield-alt mr-2 text-purple-600"></i>
+            <span>Your location data is processed locally and not stored</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Target location coordinates
+      const TARGET_LAT = 13.948103;
+      const TARGET_LNG = 100.593083;
+      //const TARGET_LAT = 13.84517;
+      //const TARGET_LNG = 100.57225;
+      const RANGE_METERS = 100;
+
+      // Calculate distance between two coordinates using Haversine formula
+      function calculateDistance(lat1, lon1, lat2, lon2) {
+        const R = 6371e3; // Earth's radius in meters
+        const φ1 = (lat1 * Math.PI) / 180;
+        const φ2 = (lat2 * Math.PI) / 180;
+        const Δφ = ((lat2 - lat1) * Math.PI) / 180;
+        const Δλ = ((lon2 - lon1) * Math.PI) / 180;
+
+        const a =
+          Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+          Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // Distance in meters
+      }
+
+      // Hide all state divs
+      function hideAllStates() {
+        document.getElementById("loading").classList.add("hidden");
+        document.getElementById("inRange").classList.add("hidden");
+        document.getElementById("outOfRange").classList.add("hidden");
+        document.getElementById("error").classList.add("hidden");
+        document.getElementById("refreshButton").classList.add("hidden");
+      }
+
+      // Show specific state
+      function showState(stateId, showRefresh = true) {
+        hideAllStates();
+        document.getElementById(stateId).classList.remove("hidden");
+        if (showRefresh && stateId !== "loading") {
+          document.getElementById("refreshButton").classList.remove("hidden");
+        }
+      }
+
+      // Check user's location
+      function checkLocation() {
+        showState("loading", false);
+
+        if (!navigator.geolocation) {
+          document.getElementById("errorMessage").textContent =
+            "Geolocation is not supported by your browser";
+          showState("error");
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          (position) => {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            const distance = calculateDistance(
+              userLat,
+              userLng,
+              TARGET_LAT,
+              TARGET_LNG
+            );
+            const distanceRounded = Math.round(distance);
+
+            if (distance <= RANGE_METERS) {
+              // User is in range
+              document.getElementById("distanceInRange").textContent =
+                distanceRounded;
+              document.getElementById(
+                "userCoordsInRange"
+              ).textContent = `${userLat.toFixed(6)}, ${userLng.toFixed(6)}`;
+              showState("inRange");
+            } else {
+              // User is out of range
+              document.getElementById("distanceOutRange").textContent =
+                distanceRounded;
+              showState("outOfRange");
+            }
+          },
+          // Error callback
+          (error) => {
+            let errorMsg = "Unable to retrieve your location";
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                errorMsg =
+                  "Location access was denied. Please enable location permissions.";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                errorMsg = "Location information is unavailable.";
+                break;
+              case error.TIMEOUT:
+                errorMsg = "Location request timed out.";
+                break;
+            }
+            document.getElementById("errorMessage").textContent = errorMsg;
+            showState("error");
+          },
+          // Options
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0,
+          }
+        );
+      }
+
+      // Check location on page load
+      window.addEventListener("load", checkLocation);
+    </script>
+  </body>
+</html>
