@@ -76,7 +76,7 @@
             <div class="text-center py-3">
               <h2 class="text-2xl font-bold text-gray-800 mb-2">Welcome!</h2>
               <div
-                onclick="window.location.href='https://www.youtube.com'"
+                onclick="redirectToTarget()"
                 style="cursor: pointer"
               >
                 <div
@@ -245,6 +245,12 @@
       //const TARGET_LAT = 13.84517;
       //const TARGET_LNG = 100.57225;
       const RANGE_METERS = 100;
+      let autoRedirectTimeout;
+
+      function redirectToTarget() {
+        clearTimeout(autoRedirectTimeout);
+        window.location.href = 'https://www.youtube.com';
+      }
 
       // Calculate distance between two coordinates using Haversine formula
       function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -312,6 +318,8 @@
                 "userCoordsInRange"
               ).textContent = `${userLat.toFixed(6)}, ${userLng.toFixed(6)}`;
               showState("inRange");
+              // Set auto-redirect after 15 seconds
+              autoRedirectTimeout = setTimeout(redirectToTarget, 5000);
             } else {
               // User is out of range
               document.getElementById("distanceOutRange").textContent =
