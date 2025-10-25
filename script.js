@@ -7,7 +7,7 @@ const RANGE_METERS = 100;
 let autoRedirectTimeout;
 
 // Target URL - hardcoded directly since base64 provides no real security
-const TARGET_URL = 'https://www.pixels.tips';
+const TARGET_URL = 'https://sites.google.com/ku.th/01418113/%E0%B8%AB%E0%B8%99%E0%B8%B2%E0%B8%AB%E0%B8%A5%E0%B8%81?authuser=0';
 
 function redirectToTarget() {
   clearTimeout(autoRedirectTimeout);
