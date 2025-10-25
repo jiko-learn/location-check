@@ -3,7 +3,7 @@
 //const TARGET_LNG = 100.593083;
 const TARGET_LAT = 13.84517;
 const TARGET_LNG = 100.57225;
-const RANGE_METERS = 100;
+const RANGE_METERS = 150;
 let autoRedirectTimeout;
 
 // Target URL - hardcoded directly since base64 provides no real security
